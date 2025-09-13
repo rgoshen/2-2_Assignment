@@ -189,7 +189,7 @@ void SceneManager::RenderScene()
 	/*** and drawing all the basic 3D shapes.						***/
 	/******************************************************************/
 	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(0.5f, 1.0f, 1.0f);
+	scaleXYZ = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	// set the XYZ rotation for the mesh
 	XrotationDegrees = 0.0f;
@@ -197,7 +197,7 @@ void SceneManager::RenderScene()
 	ZrotationDegrees = 0.0f;
 
 	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(2.0f, 0.0f, 0.0f);
+	positionXYZ = glm::vec3(0.5f, 0.0f, 0.0f);
 
 	// set the transformations into memory to be used on the drawn meshes
 	SetTransformations(
