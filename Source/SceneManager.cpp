@@ -159,16 +159,16 @@ void SceneManager::RenderScene()
 	/*** This same ordering of code should be used for transforming ***/
 	/*** and drawing all the basic 3D shapes.						***/
 	/******************************************************************/
-	// set the XYZ scale for the mesh
+	// set the XYZ scale for the mesh for top pyramid
 	scaleXYZ = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	// set the XYZ rotation for the mesh
+	// set the XYZ rotation for the mesh for top pyramid
 	XrotationDegrees = 180.0f;
-	YrotationDegrees = 0.0f;
+	YrotationDegrees = 90.0f;
 	ZrotationDegrees = 0.0f;
 
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, -0.3f, 0.0f);
+	// set the XYZ position for the mesh for top pyramid
+	positionXYZ = glm::vec3(0.0f, 0.5f, 0.0f);
 
 	// set the transformations into memory to be used on the drawn meshes
 	SetTransformations(
@@ -180,7 +180,7 @@ void SceneManager::RenderScene()
 
 	SetShaderColor(1, 1, 1, 1);
 
-	// draw the mesh with transformation values
+	// draw the mesh with transformation values for bottom pyramid
 	m_basicMeshes->DrawPyramid4Mesh();
 	/****************************************************************/
 
@@ -188,16 +188,16 @@ void SceneManager::RenderScene()
 	/*** This same ordering of code should be used for transforming ***/
 	/*** and drawing all the basic 3D shapes.						***/
 	/******************************************************************/
-	// set the XYZ scale for the mesh
+	// set the XYZ scale for the mesh for bottom pyramid
 	scaleXYZ = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	// set the XYZ rotation for the mesh
+	// set the XYZ rotation for the mesh for bottom pyramid
 	XrotationDegrees = 0.0f;
-	YrotationDegrees = 0.0f;
-	ZrotationDegrees = 0.0f;
+	YrotationDegrees = 90.0f;
+	ZrotationDegrees = -30.0f;
 
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 0.3f, 0.0f);
+	// set the XYZ position for the mesh for bottom pyramid
+	positionXYZ = glm::vec3(0.0f, -0.5f, 0.0f);
 
 	// set the transformations into memory to be used on the drawn meshes
 	SetTransformations(
