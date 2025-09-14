@@ -142,27 +142,39 @@ void SceneManager::PrepareScene()
 /***********************************************************
  *  RenderScene()
  *
- *  This method is used for rendering the 3D scene by
- *  transforming and drawing the basic 3D shapes
+ *  Renders two white “triangles” (using a flattened pyramid mesh)
+ *  as perfect mirror images across the X-axis (horizontal midline).
+ *
+ *  Key idea:
+ *    • Rotation (180° around Z) flips orientation but does NOT create a mirror.
+ *    • A mirror is a reflection — achieved here by negating the Y scale on the
+ *      second draw call (bottom triangle).
+ *
+ *  Notes:
+ *    • We scale Z to ~0 so perspective won’t distort the apparent shape.
+ *    • If back-face culling is enabled, a negative scale flips winding.
+ *      If one triangle disappears, either disable culling or add a 180° Z
+ *      rotation to re-normalize the winding for that instance.
  ***********************************************************/
 void SceneManager::RenderScene()
 {
-    // ---------- controls ----------
-    const float  scaleXY = 2.40f;   // overall triangle size (uniform X/Y)
-    const float  centerShiftY = 0.00f;   // move both triangles up/down together
-    // ------------------------------
+    // ----- Layout controls (tweakables) --------------------------------------
+    const float  scaleXY = 2.40f;   // uniform X/Y size of each triangle
+    const float  centerShiftY = 0.90f;   // move both triangles up/down together
+    const float  tipGapFactor = 0.50f;   // <0.50 keeps tips touching w/o overlap
+    // -------------------------------------------------------------------------
 
-    // Make the pyramid effectively 2D so perspective can't skew sizes
-    const glm::vec3 kScale = glm::vec3(scaleXY, scaleXY, 0.001f); // <- almost zero depth
-    const float     kYOffset = 0.48f * scaleXY;   // tips meet cleanly without overlap
-    const float     kFlipZDeg = 180.0f;            // bottom triangle points down
+    // Make the mesh effectively 2D so perspective doesn’t skew sizes
+    const glm::vec3 kScale2D(scaleXY, scaleXY, 0.001f);
+    const float     kYOffset = tipGapFactor * scaleXY;
 
-    // solid white, no texture
+    // Draw color: solid white, no texture/lighting
     SetShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-    // -------- TOP triangle (upright) --------
+    // -------- TOP triangle (upright) -----------------------------------------
+    // Standard 2D scale; positioned so its tip meets the bottom triangle’s tip.
     SetTransformations(
-        /*scale*/    kScale,
+        /*scale*/    kScale2D,
         /*rotX*/     0.0f,
         /*rotY*/     0.0f,
         /*rotZ*/     0.0f,
@@ -170,18 +182,17 @@ void SceneManager::RenderScene()
     );
     m_basicMeshes->DrawPyramid4Mesh();
 
-    // -------- BOTTOM triangle (flipped 180° around Z) --------
+    // -------- BOTTOM triangle (true mirror) ----------------------------------
+    // Reflection across X-axis: negate Y scale (mirror), keep rotations at 0.
+    // If GL_CULL_FACE is ON and this instance vanishes, either:
+    //   1) glDisable(GL_CULL_FACE) before drawing, or
+    //   2) add rotZ = 180.f here to restore front-face winding.
     SetTransformations(
-        /*scale*/    kScale,
+        /*scale*/    glm::vec3(kScale2D.x, -kScale2D.y, kScale2D.z), // mirror on Y
         /*rotX*/     0.0f,
         /*rotY*/     0.0f,
-        /*rotZ*/     kFlipZDeg,
+        /*rotZ*/     0.0f,  // set to 180.f if you must fix winding with culling on
         /*position*/ glm::vec3(0.0f, +kYOffset + centerShiftY, 0.0f)
     );
     m_basicMeshes->DrawPyramid4Mesh();
 }
-
-
-
-
-
